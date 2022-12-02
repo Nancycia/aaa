@@ -1,0 +1,139 @@
+---
+title: "MA615 Probset2"
+author: "Lintong Li"
+date: "2022-09-26"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Q1
+```{r}
+library(ggplot2)
+setwd("C:/Users/Cici/Desktop/22fallhw/615hw/proset2")
+veh1 <- read.csv(file="vehicles.CSV",header=T,sep=",")
+veh1$phevBlended <- as.logical(veh1$phevBlended)
+veh1sub <-subset(veh1,select=c("fuelCost08","year","make","city08","highway08","mpgData","phevBlended"))
+veh1sub <- subset(veh1sub, phevBlended == FALSE)
+ggplot(data = veh1sub, aes(x = year, y =fuelCost08))+
+geom_point(color = "grey", size = 3)+
+geom_smooth(method = 'gam',color="red")+
+labs(x = "40 year span 1984 through 2023",
+y = "Annual fuel cost",
+title = "Fuel economy over the 40 years span 1984 through 2023"
+)
+```
+Summary: The plot shows that the change in fuel economy over the 40 years span 1984 through 2023.
+
+
+```{r}
+veh2 <- subset(veh1,make == c("Dodge","Jeep","Toyota"))
+ggplot(data = veh2, aes(x=year, y=city08, group=make, color=make)) +
+geom_line(size = 2)+
+labs(
+x = "40 year span 1984 through 2023",
+y = "MPG City",
+title = "MPG City over 40 years span 1984 through 2023"
+)
+```
+Summary: The plot shows that the change in MPG City over the 40 years span 1984 through 2023
+
+```{r}
+ggplot(data = veh2, aes(x=year, y=highway08, group=make, color=make)) +
+geom_line(size = 2)+
+labs(
+x = "40 year span 1984 through 2023",
+y = "MPG Highway",
+title = "MPG Highway over 40 years span 1984 through 2023"
+)
+```
+Summary: The plot shows that the change in MPG Highway over the 40 years span 1984 through 2023
+
+From 3 selection, Toyota have made the most progress.
+
+Q2
+```{r}
+library(tidyverse)
+```
+
+```{r}
+setwd("C:/Users/Cici/Desktop/22fallhw/615hw/proset2")
+IXI <- read.csv(file="IXIC21-22.CSV",header=T,sep=",")
+
+```
+
+```{r}
+library(tidyquant)
+```
+
+```{r}
+IXI <- read_csv("IXIC21-22.csv")
+
+IXI %>%
+  ggplot(aes(x=Date,y=Close)) + geom_candlestick(aes(open=Open,high=High,low=Low,close=Close)) + labs(title='Candlestick Chart',y='Close',x='Date') + 
+  scale_x_date(date_labels = '%m-%Y')
+```
+Summary: The candlestick plot shows that the change in closing price from Sep.20, 2021 to Sep.20,2022 with overall download trend.
+Q3
+
+3.1
+```{r}
+setwd("C:/Users/Cici/Desktop/22fallhw/615hw/proset2")
+rural <- read.csv(file="ruralCapacityData.CSV",header=T,sep=",")
+```
+
+```{r}
+ruralsub <- subset(rural, County != "Bernalillo County")
+ruralsub
+```
+
+```{r}
+ggplot(data=ruralsub,aes(x=per_fam_below_pov, y=cap_index))+
+  geom_point(color="red",size=3)+
+  geom_smooth(method = 'loess', formula='y ~ x',span=0.5)+
+  labs(title="RCI vs per_fam_below_pov",x="Percentage of families below the poverty level",y="Rural capacity index")
+```
+Summary: The plot shows the relationship between Percentage of families below the poverty level and Rural capacity index.
+
+3.2
+```{r}
+ggplot(data=ruralsub,aes(x=per_over_25_with_bach,y=house_broadband,color=cap_index))+
+  geom_point(size=3)+
+  labs(title="house_broadband vs per_over_25_with_bach",x="Percent of population 25 and over with a bachelors degree",y="Total households with broadband connection")
+```
+Summary: The plot shows the relationship between Percent of population 25 and over with a bachelors degree and Total households with broadband connection with different level of Rural capacity index.
+
+3.3
+```{r}
+ruralsub_1 <- subset(ruralsub, pop_total < 16000)
+ggplot(data=ruralsub_1,aes(x=pop_total, y=cap_index))+
+  geom_point(color="red",size=3)+
+  geom_smooth(method = 'loess', formula='y ~ x',span=0.5)+
+  labs(title="RCI vs Total population < 16000 ",x="Total population < 16000",y="Rural capacity index")
+```
+Summary: The plot shows that the relationship between Total population < 16000 and RCI.
+
+```{r}
+ruralsub_2 <- subset(ruralsub, pop_total < 55000 & pop_total > 16000)
+ggplot(data=ruralsub_2,aes(x=pop_total, y=cap_index))+
+  geom_point(color="red",size=3)+
+  geom_smooth(method = 'loess', formula='y ~ x',span=0.5)+
+  labs(title="RCI vs Total population between 16000 and 55000",x="pop_total < 55000 & pop_total > 16000",y="Rural capacity index")
+
+```
+Summary: The plot shows that the relationship between Total pop_total < 55000 & pop_total > 16000 and RCI.
+
+
+```{r}
+ruralsub_3 <- subset(ruralsub, pop_total > 55000)
+ggplot(data=ruralsub_3,aes(x=pop_total, y=cap_index))+
+  geom_point(color="red",size=3)+
+  geom_smooth(method = 'loess', formula='y ~ x',span=0.5)+
+  labs(title="RCI vs Total population >55000",x="pop_total > 55000",y="Rural capacity index")
+```
+Summary: The plot shows the relationship between Total population >55000 and RCI.
+
+
